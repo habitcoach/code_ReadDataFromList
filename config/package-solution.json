@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "sp-fx-http-client-demo-client-side-solution",
+    "id": "3f25125c-1453-4611-98aa-ccee6c95f97f",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "SPFxHttpClientDemo description"
+      },
+      "longDescription": {
+        "default": "SPFxHttpClientDemo description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "sp-fx-http-client-demo Feature",
+        "description": "The feature that activates elements of the sp-fx-http-client-demo solution.",
+        "id": "f153221d-b434-469c-ba90-35d8e0d5a0f9",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/sp-fx-http-client-demo.sppkg"
+  }
+}

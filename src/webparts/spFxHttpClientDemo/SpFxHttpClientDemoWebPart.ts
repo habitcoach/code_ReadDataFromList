@@ -12,7 +12,7 @@ import * as strings from 'SpFxHttpClientDemoWebPartStrings';
 import SpFxHttpClientDemo from './components/SpFxHttpClientDemo';
 import { ISpFxHttpClientDemoProps } from './components/ISpFxHttpClientDemoProps';
 
-import { SPHttpClient } from '@microsoft/sp-http';
+import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { ICountryListItem } from '../../models';
 
 export interface ISpFxHttpClientDemoWebPartProps {
@@ -30,6 +30,7 @@ export default class SpFxHttpClientDemoWebPart extends BaseClientSideWebPart<ISp
       SpFxHttpClientDemo,
       {
         spListItems: this._countries,
+        onAddListItem: this._onAddListItem,
         onGetListItems: this._onGetListItems,
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
@@ -67,6 +68,65 @@ export default class SpFxHttpClientDemoWebPart extends BaseClientSideWebPart<ISp
   
     return responseJson.value as ICountryListItem[];
   }
+
+
+//on add list item
+
+  private _onAddListItem = async (): Promise<void> => {
+    const addResponse: SPHttpClientResponse = await this._addListItem();
+  
+    if (!addResponse.ok) {
+      const responseText = await addResponse.text();
+      throw new Error(responseText);
+    }
+  
+    const getResponse: ICountryListItem[] = await this._getListItems();
+    this._countries = getResponse;
+    this.render();
+  }
+
+// add list item
+  
+private async _getItemEntityType(): Promise<string> {
+  const endpoint: string = this.context.pageContext.web.absoluteUrl +
+    `/_api/web/lists/getbytitle('Countries')/items?$select=Id,Title`;
+
+  const response = await this.context.spHttpClient.get(
+    endpoint,
+    SPHttpClient.configurations.v1);
+
+  if (!response.ok) {
+    const responseText = await response.text();
+    throw new Error(responseText);
+  }
+
+  const responseJson = await response.json();
+
+  return responseJson.ListItemEntityTypeFullName;
+}
+
+private async _addListItem(): Promise<SPHttpClientResponse> {
+  const itemEntityType = await this._getItemEntityType();
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const request: any = {};
+  request.body = JSON.stringify({
+    Title: new Date().toUTCString(),
+    '@odata.type': itemEntityType
+  });
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  const endpoint = this.context.pageContext.web.absoluteUrl +
+    `/_api/web/lists/getbytitle('Countries')/items`;
+
+  return this.context.spHttpClient.post(
+    endpoint,
+    SPHttpClient.configurations.v1,
+    request);
+}
+
+//-------------------------
+
 
 
   private _getEnvironmentMessage(): Promise<string> {

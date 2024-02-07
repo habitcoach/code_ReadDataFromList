@@ -23,6 +23,7 @@ export default class SpFxHttpClientDemo extends React.Component<ISpFxHttpClientD
       </div>
       <div className={styles.buttons}>
         <button type="button" onClick={this.onGetListItemsClicked}>Get Countries</button>
+        <button type="button" onClick={this.onAddListItemClicked}>Add Countries</button>
       </div>
       <div>
         <ul>
@@ -44,5 +45,10 @@ private onGetListItemsClicked = (event: React.MouseEvent<HTMLButtonElement>): vo
   this.props.onGetListItems();
 }
 
+private onAddListItemClicked = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  event.preventDefault();
+
+  this.props.onAddListItem();
+}
 
 }
